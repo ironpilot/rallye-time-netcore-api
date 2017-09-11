@@ -9,6 +9,8 @@ namespace RallyeTime.Models
     {
         public int Id { get; set; }
         public int RaceId { get; set; }
+
+        //public Race Race { get; set; }
         
         [Required]
         [StringLength(250)]

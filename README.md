@@ -1,4 +1,4 @@
-# rallye-time-netcore-api
+# RallyeTime .Net Core 2.0 API
 
 RallyeTime API written in .Net Core 2.0
 

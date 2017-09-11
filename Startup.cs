@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RallyeTime.Persistence;
+using AutoMapper;
 
 namespace RallyeTime
 {
@@ -25,6 +26,7 @@ namespace RallyeTime
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper();
             services.AddDbContext<RallyeDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddMvc();
         }
