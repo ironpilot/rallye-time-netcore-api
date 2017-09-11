@@ -10,5 +10,8 @@ namespace RallyeTime.Persistence
             
         }
         public DbSet<Race> Races { get; set; }
+        public DbSet<Checkpoint> Checkpoints { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<CourseSection> CourseSections { get; set; }
     }
 }

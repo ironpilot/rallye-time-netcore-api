@@ -11,9 +11,10 @@ using System;
 namespace rallyetimenetcoreapi.Migrations
 {
     [DbContext(typeof(RallyeDbContext))]
-    partial class RallyeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170911212842_AddRacerInfo")]
+    partial class AddRacerInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

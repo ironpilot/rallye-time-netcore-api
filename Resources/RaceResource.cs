@@ -4,7 +4,7 @@ namespace RallyeTime.Resources
 {
     public class RaceResource
     {
-        public int Id { get; set; }
+        public int Id { get; }
 
         public string Name { get; set; }
 
