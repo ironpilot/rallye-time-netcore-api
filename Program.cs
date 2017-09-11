@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace rallye_time_netcore_api
+namespace RallyeTime
 {
     public class Program
     {
