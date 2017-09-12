@@ -20,5 +20,10 @@ namespace RallyeTime.Models
         public string Number { get; set; }
 
         public ICollection<CourseSection> CourseSections { get; set; }
+
+        public Car()
+        {
+            CourseSections = new List<CourseSection>();
+        }
     }
 }

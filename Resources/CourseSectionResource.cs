@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RallyeTime.Resources
 {
@@ -10,10 +11,13 @@ namespace RallyeTime.Resources
 
         public DateTime? TimeIn { get; set; }
 
+        [Required]
         public string TimeTrue { get; set; }
 
+        [Required]
         public string TimeActual { get; set; }
 
+        [Required]
         public string TimeError { get; set; }
 
         public int? Points { get; set; }
