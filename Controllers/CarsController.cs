@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RallyeTime.Models;
@@ -42,11 +44,55 @@ namespace RallyeTime.Controllers
             var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
             if(car != null) {
                 mapper.Map<CarResource, Car>(carResource, car);
+            } else {
+                return NotFound();
             }
 
             await context.SaveChangesAsync();
 
             return Ok(car);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCar(int id)
+        {
+            var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
+            if(car == null)
+                return NotFound();
+
+            context.Remove(car);
+            await context.SaveChangesAsync();
+
+            return Ok(id);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCar(int id)
+        {
+            var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
+            if (car == null)
+                return NotFound();
+
+            var carResource = mapper.Map<Car, CarResource>(car);
+
+            return Ok(carResource);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCars()
+        {
+            var cars = await context.Cars.Include(crs => crs.CourseSections).ToListAsync();
+            if (cars.Count == 0)
+                return NotFound();
+
+            var carResources = new List<CarResource>();
+            foreach(var car in cars)
+            {
+                carResources.Add(mapper.Map<Car, CarResource>(car));
+            }
+            
+            return Ok(carResources);
         }
     }
 }

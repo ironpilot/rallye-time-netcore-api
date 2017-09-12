@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RallyeTime.Persistence;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace RallyeTime
 {
@@ -29,6 +30,19 @@ namespace RallyeTime
             services.AddAutoMapper();
             services.AddDbContext<RallyeDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddMvc();
+
+            // Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                //@todo add to and pull from configuration
+                options.Authority = "https://autopilotstudios.auth0.com/";
+                options.Audience = "https://auth0-test.rallyetime.com";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +52,9 @@ namespace RallyeTime
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Enable authentication middleware
+            app.UseAuthentication();
 
             app.UseMvc();
         }
