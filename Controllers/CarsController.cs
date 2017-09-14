@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -28,11 +29,24 @@ namespace RallyeTime.Controllers
                 return BadRequest(ModelState);
 
             var car = mapper.Map<CarResource, Car>(carResource);
+            car.Race = context.Races.Where(r => r.Id == car.RaceId).FirstOrDefault();
+            var sections = new List<CourseSection>();
+            foreach(var checkpoint in context.Checkpoints.Where(c => c.RaceId == car.RaceId).ToList()) {
+                sections.Add(
+                    new CourseSection() {
+                        Car = car,
+                        Checkpoint = checkpoint
+                    }
+                );
+            }
+            car.CourseSections = sections;
 
             context.Cars.Add(car);
             await context.SaveChangesAsync();
 
-            return Ok(car);
+            var finalResource = mapper.Map<Car, CarResource>(car);
+
+            return Ok(finalResource);
         }
 
         [HttpPut("{id}")]
@@ -79,7 +93,6 @@ namespace RallyeTime.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCars()
         {
             var cars = await context.Cars.Include(crs => crs.CourseSections).ToListAsync();

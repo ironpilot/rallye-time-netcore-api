@@ -7,6 +7,8 @@ namespace RallyeTime.Resources
     {
         public int Id { get; set; }
 
+        public RaceResource Race { get; set; }
+
         [Required]
         public string Driver { get; set; }
 

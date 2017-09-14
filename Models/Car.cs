@@ -7,6 +7,10 @@ namespace RallyeTime.Models
     {
         public int Id { get; set; }
 
+        public int RaceId { get; set; }
+        
+        public Race Race { get; set; }
+
         [Required]
         [StringLength(100)]
         public string Driver { get; set; }

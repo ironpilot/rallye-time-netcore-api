@@ -14,7 +14,7 @@ namespace RallyeTime.Mapping
             CreateMap<Race, RaceResource>();
             CreateMap<Checkpoint, CheckpointResource>();
             CreateMap<Car, CarResource>();
-            CreateMap<CourseSection, CourseSectionResource >();
+            CreateMap<CourseSection, CourseSectionResource>();
 
             //Resource to Model
             CreateMap<RaceResource, Race>()
@@ -23,6 +23,7 @@ namespace RallyeTime.Mapping
                 .ForMember(c => c.Id, o => o.Ignore());
             CreateMap<CarResource, Car>()
                 .ForMember(c => c.Id, o => o.Ignore())
+                .ForMember(c => c.Race, o => o.Ignore())
                 .ForMember(c => c.CourseSections, o => o.Ignore())
                 .AfterMap((resource, model) => {
                     //Remove
