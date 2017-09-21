@@ -1,5 +1,7 @@
 using AutoMapper;
 using RallyeTime.Resources;
+using RallyeTime.Resources.Race;
+using RallyeTime.Resources.Car;
 using RallyeTime.Models;
 using System.Linq;
 using System.Collections.Generic;

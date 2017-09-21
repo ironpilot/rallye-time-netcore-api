@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RallyeTime.Models;
 using RallyeTime.Persistence;
-using RallyeTime.Resources;
+using RallyeTime.Resources.Car;
 
 namespace RallyeTime.Controllers
 {

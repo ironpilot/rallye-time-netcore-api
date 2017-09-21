@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using RallyeTime.Resources.Race;
 
-namespace RallyeTime.Resources
+namespace RallyeTime.Resources.Car
 {
     public class CarResource
     {

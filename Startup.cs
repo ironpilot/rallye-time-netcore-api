@@ -29,6 +29,16 @@ namespace RallyeTime
         {
             services.AddAutoMapper();
             services.AddDbContext<RallyeDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            services.AddCors(options => {
+                options.AddPolicy("Default",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                );
+            });
+
             services.AddMvc();
 
             // Add Authentication Services
@@ -52,6 +62,8 @@ namespace RallyeTime
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("Default");
 
             // Enable authentication middleware
             app.UseAuthentication();

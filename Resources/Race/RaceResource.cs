@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RallyeTime.Resources
+namespace RallyeTime.Resources.Race
 {
     public class RaceResource
     {
@@ -9,8 +9,6 @@ namespace RallyeTime.Resources
         public string Name { get; set; }
 
         public IList<CheckpointResource> Checkpoints { get; set; }
-
-        public string AccessCode { get; set; }
 
         public RaceResource()
         {
