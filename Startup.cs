@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using RallyeTime.Persistence;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace RallyeTime
 {
@@ -53,6 +54,12 @@ namespace RallyeTime
                 options.Authority = "https://autopilotstudios.auth0.com/";
                 options.Audience = "https://auth0-test.rallyetime.com";
             });
+
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "RallyeTime API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +74,15 @@ namespace RallyeTime
 
             // Enable authentication middleware
             app.UseAuthentication();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RallyeTime V1");
+            });
 
             app.UseMvc();
         }
