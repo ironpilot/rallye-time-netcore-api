@@ -16,24 +16,30 @@ namespace RallyeTime.Controllers
     {
         private readonly IMapper mapper;
         private readonly RallyeDbContext context;
-        public CarsController(IMapper mapper, RallyeDbContext context)
+        private readonly ICarRepository repository;
+        private readonly IUnitOfWork unitOfWork;
+        public CarsController(IMapper mapper, RallyeDbContext context, ICarRepository repository, IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
+            this.repository = repository;
             this.context = context;
             this.mapper = mapper;
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateCar([FromBody] CarResource carResource)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var car = mapper.Map<CarResource, Car>(carResource);
             car.Race = context.Races.Where(r => r.Id == car.RaceId).FirstOrDefault();
             var sections = new List<CourseSection>();
-            foreach(var checkpoint in context.Checkpoints.Where(c => c.RaceId == car.RaceId).ToList()) {
+            foreach (var checkpoint in context.Checkpoints.Where(c => c.RaceId == car.RaceId).ToList())
+            {
                 sections.Add(
-                    new CourseSection() {
+                    new CourseSection()
+                    {
                         Car = car,
                         Checkpoint = checkpoint
                     }
@@ -41,8 +47,8 @@ namespace RallyeTime.Controllers
             }
             car.CourseSections = sections;
 
-            context.Cars.Add(car);
-            await context.SaveChangesAsync();
+            repository.Add(car);
+            await unitOfWork.CompleteAsync();
 
             var finalResource = mapper.Map<Car, CarResource>(car);
 
@@ -55,14 +61,17 @@ namespace RallyeTime.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
-            if(car != null) {
+            var car = await repository.GetCar(id);
+            if (car != null)
+            {
                 mapper.Map<CarResource, Car>(carResource, car);
-            } else {
+            }
+            else
+            {
                 return NotFound();
             }
 
-            await context.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
 
             return Ok(car);
         }
@@ -70,12 +79,12 @@ namespace RallyeTime.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-            var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
-            if(car == null)
+            var car = await repository.GetCar(id);
+            if (car == null)
                 return NotFound();
 
-            context.Remove(car);
-            await context.SaveChangesAsync();
+            repository.Remove(car);
+            await unitOfWork.CompleteAsync();
 
             return Ok(id);
         }
@@ -83,7 +92,7 @@ namespace RallyeTime.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCar(int id)
         {
-            var car = await context.Cars.Include(crs => crs.CourseSections).SingleOrDefaultAsync(c => c.Id == id);
+            var car = await repository.GetCar(id);
             if (car == null)
                 return NotFound();
 
@@ -95,16 +104,16 @@ namespace RallyeTime.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCars()
         {
-            var cars = await context.Cars.Include(crs => crs.CourseSections).ToListAsync();
+            var cars = await repository.GetAllCars();
             if (cars.Count == 0)
                 return NotFound();
 
             var carResources = new List<CarResource>();
-            foreach(var car in cars)
+            foreach (var car in cars)
             {
                 carResources.Add(mapper.Map<Car, CarResource>(car));
             }
-            
+
             return Ok(carResources);
         }
     }
